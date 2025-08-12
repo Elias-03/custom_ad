@@ -1,94 +1,132 @@
-// promo-widget.js   (host on GitHub raw; name it e.g. promo-widget.js or wplx-widget.js)
+// promo-widget.js
 (function () {
-  // config override (from site-common.js) if present
   const cfg = window.__WPLX_WIDGET_CONFIG || {};
-  const jsonUrl = cfg.jsonUrl || "https://raw.githubusercontent.com/YourUser/YourRepo/main/promo.json";
-  const pollMs = (Number(cfg.pollIntervalSeconds) || 0) * 1000;
-  const containerId = "wplx-promo-widget";   // intentionally not "ad"
+  const jsonUrl = cfg.jsonUrl || "./promo.json";
+  const containerId = "wplx-promo-widget";
   const styleId = "wplx-promo-style";
+  const shownHistoryKey = "wplx_shown_history";
+  const sessionClosedKey = "wplx_session_closed";
 
   function createStyles() {
     if (document.getElementById(styleId)) return;
-    const css = `
-      #${containerId} { position: fixed; z-index: 999999; width: 320px; max-width: calc(100% - 32px); box-sizing: border-box; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; transition: opacity .22s ease, transform .22s ease; }
-      #${containerId}.bottom-right { right: 16px; bottom: 16px; }
-      #${containerId}.bottom-left  { left: 16px; bottom: 16px; }
-      #${containerId}.top-right    { right: 16px; top: 16px; }
-      #${containerId}.top-left     { left: 16px; top: 16px; }
-      #${containerId} .wplx-wrap { background: #fff; border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); overflow: hidden; border: 1px solid rgba(0,0,0,0.06); position: relative; }
-      #${containerId} img { display:block; width:100%; height:auto; object-fit:cover; }
-      #${containerId} .wplx-body { padding: 12px; }
-      #${containerId} .wplx-brand { font-size:12px; color:#666; margin:0 0 6px; }
-      #${containerId} .wplx-offer { font-size:16px; margin:0 0 6px; color:#111; }
-      #${containerId} .wplx-text { font-size:14px; color:#333; margin:0 0 8px; }
-      #${containerId} .wplx-cta { display:inline-block; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:600; }
-      #${containerId} .wplx-close { position:absolute; top:8px; right:8px; border:0; background:transparent; font-size:16px; cursor:pointer; color:#555; }
-      @media (max-width:420px){ #${containerId} { width: 94%; left:3%; right:3%; } }
-    `;
-    const s = document.createElement("style");
-    s.id = styleId;
-    s.appendChild(document.createTextNode(css));
-    document.head.appendChild(s);
+    const link = document.createElement("link");
+    link.id = styleId;
+    link.rel = "stylesheet";
+    link.href = "./promo-widget.css";
+    document.head.appendChild(link);
   }
 
-  function escapeHtml(s) { if (s == null) return ""; return String(s).replace(/[&<>"']/g, function (m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
-  function escapeAttr(s) { return escapeHtml(s).replace(/"/g,'&quot;'); }
+  function escapeHtml(s) { if (s == null) return ""; return String(s).replace(/[&<>"']/g, (m) => ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": '&#39;' }[m])); }
 
-  function buildMarkup(data) {
-    // only render provided fields; missing fields are skipped (layout remains sane)
-    const imgHtml = data.image ? `<a href="${escapeAttr(data.url || '#')}" target="_blank" rel="noopener"><img src="${escapeAttr(data.image)}" alt="${escapeAttr(data.brand || 'promo')}" onerror="this.style.display='none'"></a>` : "";
-    const brandHtml = data.brand ? `<div class="wplx-brand">${escapeHtml(data.brand)}</div>` : "";
-    const offerHtml = data.offer ? `<div class="wplx-offer">${escapeHtml(data.offer)}</div>` : "";
-    const textHtml = data.text ? `<div class="wplx-text">${escapeHtml(data.text)}</div>` : "";
-    const targetHtml = data.target ? `<div class="wplx-target" style="font-size:12px;color:#666;margin-top:6px;">${escapeHtml(data.target)}</div>` : "";
-    const suppHtml = data.supplementary ? `<div class="wplx-supplementary" style="font-size:12px;color:#999;margin-top:4px;">${escapeHtml(data.supplementary)}</div>` : "";
-    const btnBg = data.buttonColor || "#007bff";
-    const btnColor = data.buttonTextColor || "#fff";
-    const ctaHtml = data.cta ? `<a class="wplx-cta" href="${escapeAttr(data.url || '#')}" target="_blank" rel="noopener" style="background:${escapeAttr(btnBg)};color:${escapeAttr(btnColor)}">${escapeHtml(data.cta)}</a>` : "";
+  function buildMarkup(promoData, styleData) {
+    const { image, url, brand, offer, text, cta } = promoData;
+    const { buttonColor, buttonTextColor } = styleData;
+
+    const imgHtml = image ? `<div class="wplx-image-wrap"><a href="${escapeHtml(url || '#')}" target="_blank" rel="noopener"><img src="${escapeHtml(image)}" alt="${escapeHtml(brand || 'promo')}"></a></div>` : "";
+    const brandHtml = brand ? `<div class="wplx-brand">${escapeHtml(brand)}</div>` : "";
+    const offerHtml = offer ? `<div class="wplx-offer">${escapeHtml(offer)}</div>` : "";
+    const textHtml = text ? `<div class="wplx-text">${escapeHtml(text)}</div>` : "";
+    const btnBg = buttonColor || "#007bff";
+    const btnColor = buttonTextColor || "#fff";
+    const ctaHtml = cta ? `<a class="wplx-cta" href="${escapeHtml(url || '#')}" target="_blank" rel="noopener" style="background-color:${escapeHtml(btnBg)};color:${escapeHtml(btnColor)}">${escapeHtml(cta)}</a>` : "";
     const closeBtn = `<button class="wplx-close" aria-label="close" title="close">✕</button>`;
-    return `<div class="wplx-wrap">${closeBtn}${imgHtml}<div class="wplx-body">${brandHtml}${offerHtml}${textHtml}${targetHtml}${suppHtml}${ctaHtml}</div></div>`;
+
+    return `<div class="wplx-wrap">${closeBtn}${imgHtml}<div class="wplx-body">${brandHtml}${offerHtml}${textHtml}${ctaHtml}</div></div>`;
   }
 
   function render(data) {
-    if (!data || typeof data !== "object") return;
-    // status check
-    if ((String(data.status || "").toLowerCase()) !== "on") {
-      // remove if present
-      const e = document.getElementById(containerId); if (e) e.remove(); return;
+    const { promo, style, rules } = data;
+    if (!promo || promo.status !== "on") {
+      removeWidget();
+      return;
     }
-    createStyles();
+
+    if (isPageExcluded(rules)) return;
+    if (!shouldShowAd(rules)) return;
+
+    createStyles(style);
     let el = document.getElementById(containerId);
     if (!el) {
       el = document.createElement("div");
       el.id = containerId;
       document.body.appendChild(el);
-      // close button handler (delegated)
       el.addEventListener("click", function (ev) {
         if (ev.target.closest(".wplx-close")) {
           el.remove();
+          if (rules.showOncePerSession) {
+            sessionStorage.setItem(sessionClosedKey, "true");
+          }
+          const history = JSON.parse(localStorage.getItem(shownHistoryKey) || "[]");
+          history.push(Date.now());
+          localStorage.setItem(shownHistoryKey, JSON.stringify(history));
         }
       });
     }
-    // position: priority order -> window config -> data -> default
-    const pos = (window.__WPLX_WIDGET_CONFIG && window.__WPLX_WIDGET_CONFIG.position) || data.position || "bottom-right";
-    el.className = pos;
-    // width override if provided
-    if (data.width) el.style.width = data.width;
-    el.innerHTML = buildMarkup(data);
+
+    el.className = style.position || "bottom-right";
+    if (style.width) el.style.width = style.width;
+    el.innerHTML = buildMarkup(promo, style);
+
+    setTimeout(() => el.classList.add("visible"), 50);
   }
 
-  function removeWidget() { const e = document.getElementById(containerId); if (e) e.remove(); }
+  function removeWidget() {
+    const e = document.getElementById(containerId);
+    if (e) e.remove();
+  }
+
+  function isPageExcluded(rules) {
+    const path = window.location.pathname || "/";
+    if (rules && rules.excludedPaths && rules.excludedPaths.indexOf(path) !== -1) return true;
+    if (rules && rules.excludedPatterns) {
+      for (let pattern of rules.excludedPatterns) {
+        try {
+          if (new RegExp(pattern, "i").test(path)) return true;
+        } catch (e) { console.warn("Invalid regex pattern:", pattern); }
+      }
+    }
+    return false;
+  }
+
+  function shouldShowAd(rules) {
+    if (rules.showOncePerSession && sessionStorage.getItem(sessionClosedKey) === "true") {
+      return false;
+    }
+
+    if (rules.displayFrequency) {
+      const freq = rules.displayFrequency;
+      if (freq.minutes && freq.times && freq.times > 0) {
+        const history = JSON.parse(localStorage.getItem(shownHistoryKey) || "[]");
+        const now = Date.now();
+        const cutoff = now - (freq.minutes * 60 * 1000);
+
+        const recentViews = history.filter(t => t > cutoff);
+        if (recentViews.length >= freq.times) {
+          return false;
+        }
+
+        if (recentViews.length > 0) {
+          const lastView = recentViews[recentViews.length - 1];
+          const interval = (freq.minutes * 60 * 1000) / freq.times;
+          if (now < lastView + interval) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
 
   function fetchAndRender() {
     fetch(jsonUrl, { cache: "no-store" })
-      .then(function (r) { if (!r.ok) throw new Error("fetch failed "+r.status); return r.json(); })
-      .then(function (json) { render(json); })
-      .catch(function (err) { /* silent fail — do not break host site */ console.warn("promo-widget fetch err:", err); });
+      .then(r => r.ok ? r.json() : Promise.reject("Fetch failed"))
+      .then(json => {
+        if (json && typeof json === "object") {
+          render(json);
+        }
+      })
+      .catch(err => console.warn("promo-widget fetch err:", err));
   }
 
-  // load once, then optionally poll for changes
   fetchAndRender();
-  if (pollMs > 0) {
-    setInterval(fetchAndRender, pollMs);
-  }
 })();
