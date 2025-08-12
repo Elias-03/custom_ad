@@ -1,7 +1,8 @@
 // promo-widget.js
 (function () {
   const cfg = window.__WPLX_WIDGET_CONFIG || {};
-  const jsonUrl = cfg.jsonUrl || "./promo.json";
+  const baseUrl = cfg.baseUrl || ".";
+  const jsonUrl = cfg.jsonUrl || `${baseUrl}/promo.json`;
   const containerId = "wplx-promo-widget";
   const styleId = "wplx-promo-style";
   const shownHistoryKey = "wplx_shown_history";
@@ -12,7 +13,7 @@
     const link = document.createElement("link");
     link.id = styleId;
     link.rel = "stylesheet";
-    link.href = "./promo-widget.css";
+    link.href = `${baseUrl}/promo-widget.css`;
     document.head.appendChild(link);
   }
 
@@ -20,9 +21,8 @@
 
   function buildMarkup(promoData, styleData) {
     const { image, url, brand, offer, text, cta, target, supplementary } = promoData;
-    const { buttonColor, buttonTextColor } = styleData;
+    const { buttonColor, buttonTextColor, wrapIsClickable } = styleData;
 
-    const imgHtml = image ? `<div class="wplx-image-wrap"><a href="${escapeHtml(url || '#')}" target="_blank" rel="noopener"><img src="${escapeHtml(image)}" alt="${escapeHtml(brand || 'promo')}"></a></div>` : "";
     const brandHtml = brand ? `<div class="wplx-brand">${escapeHtml(brand)}</div>` : "";
     const offerHtml = offer ? `<div class="wplx-offer">${escapeHtml(offer)}</div>` : "";
     const textHtml = text ? `<div class="wplx-text">${escapeHtml(text)}</div>` : "";
@@ -30,10 +30,26 @@
     const suppHtml = supplementary ? `<div class="wplx-supplementary">${escapeHtml(supplementary)}</div>` : "";
     const btnBg = buttonColor || "#007bff";
     const btnColor = buttonTextColor || "#fff";
-    const ctaHtml = cta ? `<a class="wplx-cta" href="${escapeHtml(url || '#')}" target="_blank" rel="noopener" style="background-color:${escapeHtml(btnBg)};color:${escapeHtml(btnColor)}">${escapeHtml(cta)}</a>` : "";
     const closeBtn = `<button class="wplx-close" aria-label="close" title="close">✕</button>`;
 
-    return `<div class="wplx-wrap">${closeBtn}${imgHtml}<div class="wplx-body">${brandHtml}${offerHtml}${textHtml}${targetHtml}${suppHtml}${ctaHtml}</div></div>`;
+    let imgHtml = image ? `<div class="wplx-image-wrap"><img src="${escapeHtml(image)}" alt="${escapeHtml(brand || 'promo')}"></div>` : "";
+    let ctaHtml = cta ? `<span class="wplx-cta" style="background-color:${escapeHtml(btnBg)};color:${escapeHtml(btnColor)}">${escapeHtml(cta)}</span>` : "";
+
+    if (!wrapIsClickable) {
+      if (image) {
+        imgHtml = `<div class="wplx-image-wrap"><a href="${escapeHtml(url || '#')}" target="_blank" rel="noopener"><img src="${escapeHtml(image)}" alt="${escapeHtml(brand || 'promo')}"></a></div>`;
+      }
+      if (cta) {
+        ctaHtml = `<a class="wplx-cta" href="${escapeHtml(url || '#')}" target="_blank" rel="noopener" style="background-color:${escapeHtml(btnBg)};color:${escapeHtml(btnColor)}">${escapeHtml(cta)}</a>`;
+      }
+    }
+
+    const innerContent = `${closeBtn}${imgHtml}<div class="wplx-body">${brandHtml}${offerHtml}${textHtml}${targetHtml}${suppHtml}${ctaHtml}</div>`;
+
+    if (wrapIsClickable) {
+      return `<a href="${escapeHtml(url || '#')}" target="_blank" rel="noopener" class="wplx-wrap-link"><div class="wplx-wrap">${innerContent}</div></a>`;
+    }
+    return `<div class="wplx-wrap">${innerContent}</div>`;
   }
 
   function render(data) {
@@ -54,6 +70,7 @@
       document.body.appendChild(el);
       el.addEventListener("click", function (ev) {
         if (ev.target.closest(".wplx-close")) {
+          ev.preventDefault();
           el.remove();
           if (rules.showOncePerSession) {
             sessionStorage.setItem(sessionClosedKey, "true");
@@ -78,12 +95,12 @@
   }
 
   function isPageExcluded(rules) {
-    const path = window.location.pathname || "/";
-    if (rules && rules.excludedPaths && rules.excludedPaths.indexOf(path) !== -1) return true;
+    const href = window.location.href;
+    if (rules && rules.excludedPaths && rules.excludedPaths.indexOf(href) !== -1) return true;
     if (rules && rules.excludedPatterns) {
       for (let pattern of rules.excludedPatterns) {
         try {
-          if (new RegExp(pattern, "i").test(path)) return true;
+          if (new RegExp(pattern, "i").test(href)) return true;
         } catch (e) { console.warn("Invalid regex pattern:", pattern); }
       }
     }

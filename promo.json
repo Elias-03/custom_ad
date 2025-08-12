@@ -14,7 +14,8 @@
     "position": "bottom-right",
     "width": "320px",
     "buttonColor": "#ff5a5f",
-    "buttonTextColor": "#ffffff"
+    "buttonTextColor": "#ffffff",
+    "wrapIsClickable": true
   },
   "rules": {
     "excludedPaths": [

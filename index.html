@@ -9,10 +9,11 @@
   <script>
     // site-common.js
     (function () {
-        const REMOTE_WIDGET_JS = "./promo-widget.js"; // Using local for preview
-        const freshJsonUrl = "./promo.json?t=" + Date.now();
+        const REMOTE_WIDGET_JS = "promo-widget.js"; // Using local for preview
+        const freshJsonUrl = "promo.json?t=" + Date.now();
 
         window.__WPLX_WIDGET_CONFIG = window.__WPLX_WIDGET_CONFIG || {
+            baseUrl: ".", // In production, this should be the absolute URL to the ad assets
             jsonUrl: freshJsonUrl,
         };
 
