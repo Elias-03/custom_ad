@@ -1,0 +1,15 @@
+{
+  "image": "https://via.placeholder.com/600x300",
+  "url": "https://your-offer.example.com",
+  "text": "Limited-time developer offer. Clean, fast and easy to use.",
+  "brand": "WebToolPlus",
+  "offer": "50% OFF for first purchase",
+  "cta": "Claim Now",
+  "target": "For coders & creators",
+  "supplementary": "T&Cs apply. Ends soon.",
+  "status": "on",
+  "buttonColor": "#ff5a5f",
+  "buttonTextColor": "#ffffff",
+  "position": "bottom-right",
+  "width": "320px"
+}
