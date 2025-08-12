@@ -1,7 +1,7 @@
 #wplx-promo-widget {
     position: fixed;
     z-index: 999999;
-    width: 320px;
+    width: 500px;
     max-width: calc(100% - 20px);
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -70,7 +70,7 @@
 }
 
 #wplx-promo-widget .wplx-brand {
-    font-size: 12px;
+    font-size: 20px;
     color: #666;
     margin: 0 0 4px;
     font-weight: 500;
@@ -140,6 +140,18 @@
 #wplx-promo-widget .wplx-close:hover {
     background: #e0e0e0;
     transform: rotate(90deg);
+}
+
+#wplx-promo-widget .wplx-offer {
+    line-height: 3 !important;
+}
+
+#wplx-promo-widget .wplx-text {
+    line-height: 3 !important;
+}
+
+#wplx-promo-widget .wplx-target {
+    line-height: 3 !important;
 }
 
 /* Mid-range devices (tablets) */
