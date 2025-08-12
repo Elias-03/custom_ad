@@ -19,19 +19,21 @@
   function escapeHtml(s) { if (s == null) return ""; return String(s).replace(/[&<>"']/g, (m) => ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": '&#39;' }[m])); }
 
   function buildMarkup(promoData, styleData) {
-    const { image, url, brand, offer, text, cta } = promoData;
+    const { image, url, brand, offer, text, cta, target, supplementary } = promoData;
     const { buttonColor, buttonTextColor } = styleData;
 
     const imgHtml = image ? `<div class="wplx-image-wrap"><a href="${escapeHtml(url || '#')}" target="_blank" rel="noopener"><img src="${escapeHtml(image)}" alt="${escapeHtml(brand || 'promo')}"></a></div>` : "";
     const brandHtml = brand ? `<div class="wplx-brand">${escapeHtml(brand)}</div>` : "";
     const offerHtml = offer ? `<div class="wplx-offer">${escapeHtml(offer)}</div>` : "";
     const textHtml = text ? `<div class="wplx-text">${escapeHtml(text)}</div>` : "";
+    const targetHtml = target ? `<div class="wplx-target">${escapeHtml(target)}</div>` : "";
+    const suppHtml = supplementary ? `<div class="wplx-supplementary">${escapeHtml(supplementary)}</div>` : "";
     const btnBg = buttonColor || "#007bff";
     const btnColor = buttonTextColor || "#fff";
     const ctaHtml = cta ? `<a class="wplx-cta" href="${escapeHtml(url || '#')}" target="_blank" rel="noopener" style="background-color:${escapeHtml(btnBg)};color:${escapeHtml(btnColor)}">${escapeHtml(cta)}</a>` : "";
     const closeBtn = `<button class="wplx-close" aria-label="close" title="close">✕</button>`;
 
-    return `<div class="wplx-wrap">${closeBtn}${imgHtml}<div class="wplx-body">${brandHtml}${offerHtml}${textHtml}${ctaHtml}</div></div>`;
+    return `<div class="wplx-wrap">${closeBtn}${imgHtml}<div class="wplx-body">${brandHtml}${offerHtml}${textHtml}${targetHtml}${suppHtml}${ctaHtml}</div></div>`;
   }
 
   function render(data) {

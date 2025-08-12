@@ -11,7 +11,7 @@
     "supplementary": "T&Cs apply. Ends soon."
   },
   "style": {
-    "position": "bottom-right",
+    "position": "bottom-left",
     "width": "320px",
     "buttonColor": "#ff5a5f",
     "buttonTextColor": "#ffffff"
