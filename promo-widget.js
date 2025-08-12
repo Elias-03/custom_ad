@@ -2,20 +2,11 @@
 (function () {
   const cfg = window.__WPLX_WIDGET_CONFIG || {};
   const baseUrl = cfg.baseUrl || ".";
-  const jsonUrl = cfg.jsonUrl || `https://raw.githubusercontent.com/Elias-03/custom_ad/main/promo.json`;
+  const jsonUrl = cfg.jsonUrl || `${baseUrl}/promo.json`;
   const containerId = "wplx-promo-widget";
   const styleId = "wplx-promo-style";
   const shownHistoryKey = "wplx_shown_history";
   const sessionClosedKey = "wplx_session_closed";
-
-  function createStyles() {
-    if (document.getElementById(styleId)) return;
-    const link = document.createElement("link");
-    link.id = styleId;
-    link.rel = "stylesheet";
-    link.href = `${baseUrl}/promo-widget.css`;
-    document.head.appendChild(link);
-  }
 
   function escapeHtml(s) { if (s == null) return ""; return String(s).replace(/[&<>"']/g, (m) => ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": '&#39;' }[m])); }
 
@@ -62,7 +53,6 @@
     if (isPageExcluded(rules)) return;
     if (!shouldShowAd(rules)) return;
 
-    createStyles(style);
     let el = document.getElementById(containerId);
     if (!el) {
       el = document.createElement("div");
@@ -149,4 +139,3 @@
 
   fetchAndRender();
 })();
-
