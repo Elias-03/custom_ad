@@ -6,6 +6,7 @@
 
     window.__WPLX_WIDGET_CONFIG = window.__WPLX_WIDGET_CONFIG || {
         jsonUrl: freshJsonUrl,
+        forceShow: true,
     };
 
     // Inject CSS via JS

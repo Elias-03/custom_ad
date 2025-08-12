@@ -50,8 +50,10 @@
       return;
     }
 
-    if (isPageExcluded(rules)) return;
-    if (!shouldShowAd(rules)) return;
+    if (!cfg.forceShow) {
+      if (isPageExcluded(rules)) return;
+      if (!shouldShowAd(rules)) return;
+    }
 
     let el = document.getElementById(containerId);
     if (!el) {
