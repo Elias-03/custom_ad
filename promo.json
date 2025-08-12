@@ -10,6 +10,6 @@
   "status": "on",
   "buttonColor": "#ff5a5f",
   "buttonTextColor": "#ffffff",
-  "position": "bottom-left",
+  "position": "bottom-right",
   "width": "320px"
 }
