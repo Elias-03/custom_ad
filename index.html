@@ -7,4 +7,46 @@
 <body>
   <h1>Ad Widget Preview</h1>
 </body>
+  <script>
+    // site-common.js
+(function () {
+    const REMOTE_WIDGET_JS = "https://cdn.jsdelivr.net/gh/Elias-03/custom_ad/promo-widget.js";
+    const EXCLUDE_PATHS = ["./about", "/features", "/thank-you"];
+    const EXCLUDE_PATTERNS = [/\/admin(\/|$)/i, /\/checkout/i];
+    const EXCLUDE_META_NAME = "wplx-widget";
+
+    // Force no-cache by adding timestamp param every load
+    const freshJsonUrl = "https://raw.githubusercontent.com/Elias-03/custom_ad/refs/heads/main/promo.json?t=" + Date.now();
+
+    window.__WPLX_WIDGET_CONFIG = window.__WPLX_WIDGET_CONFIG || {
+        jsonUrl: freshJsonUrl,
+        position: "bottom-right",
+        pollIntervalSeconds: 60
+    };
+
+    function isPageExcluded() {
+        try {
+            const path = window.location.pathname || "/";
+            if (EXCLUDE_PATHS.indexOf(path) !== -1) return true;
+            for (let rx of EXCLUDE_PATTERNS) if (rx.test(path)) return true;
+            const meta = document.querySelector(`meta[name="${EXCLUDE_META_NAME}"]`);
+            if (meta && String(meta.content).trim().toLowerCase() === "off") return true;
+            if (document.body && document.body.dataset && document.body.dataset.wplx === "off") return true;
+            if (document.documentElement.classList.contains("no-promo")) return true;
+        } catch (e) { }
+        return false;
+    }
+
+    if (!isPageExcluded()) {
+        const s = document.createElement("script");
+        s.src = REMOTE_WIDGET_JS;
+        s.async = true;
+        s.defer = true;
+        s.crossOrigin = "anonymous";
+        (document.head || document.documentElement).appendChild(s);
+    }
+})();
+
+
+  </script>
 </html>
