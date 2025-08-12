@@ -7,7 +7,7 @@
   "cta": "Claim Now",
   "target": "For coders & creators",
   "supplementary": "T&Cs apply. Ends soon.",
-  "status": "on",
+  "status": "off",
   "buttonColor": "#ff5a5f",
   "buttonTextColor": "#ffffff",
   "position": "bottom-right",
