@@ -50,7 +50,9 @@
       return;
     }
 
-    if (!cfg.forceShow) {
+    const isPreview = new URLSearchParams(window.location.search).get('wplx-preview') === 'true';
+
+    if (!isPreview) {
       if (isPageExcluded(rules)) return;
       if (!shouldShowAd(rules)) return;
     }

@@ -1,8 +1,8 @@
 // site-common.js
 (function () {
-    const REMOTE_WIDGET_JS = "https://cdn.jsdelivr.net/gh/Elias-03/custom_ad/promo-widget.js";
-    const REMOTE_WIDGET_CSS = "https://cdn.jsdelivr.net/gh/Elias-03/custom_ad/promo-widget.css";
-    const freshJsonUrl = "https://raw.githubusercontent.com/Elias-03/custom_ad/main/promo.json?t=" + Date.now();
+    const REMOTE_WIDGET_JS = "./promo-widget.js";
+    const REMOTE_WIDGET_CSS = "./promo-widget.css";
+    const freshJsonUrl = "./promo.json?t=" + Date.now();
 
     window.__WPLX_WIDGET_CONFIG = window.__WPLX_WIDGET_CONFIG || {
         jsonUrl: freshJsonUrl,

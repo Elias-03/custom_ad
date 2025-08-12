@@ -12,7 +12,6 @@
   },
   "style": {
     "position": "bottom-right",
-    "width": "320px",
     "buttonColor": "#ff5a5f",
     "buttonTextColor": "#ffffff",
     "wrapIsClickable": true
