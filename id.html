@@ -2,8 +2,26 @@
 <html>
 <head>
   <title>Ad Preview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <script src="site-common.js"></script>
+  <script>
+// Dynamically load site-common.js without using a <script> tag in HTML
+(function () {
+    const script = document.createElement("script");
+    script.src = "site-common.js"; // path to your JS file
+    script.type = "text/javascript";
+    script.async = false; // ensures execution order if needed
+    document.head.appendChild(script);
+
+    script.onload = function () {
+        console.log("site-common.js loaded successfully.");
+    };
+
+    script.onerror = function () {
+        console.error("Failed to load site-common.js");
+    };
+})();
+  </script>
 </body>
 </html>
