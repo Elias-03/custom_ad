@@ -4,7 +4,7 @@
     "image": "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXhwcmg4aTN4M2Q1ZjQxbXhqbHp5dDIzNHpuOXR5MHcxaG93NnptMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tsX3YMWYzDPjAARfeg/giphy.gif",
     "url": "https://watchsy.cc",
     "text": "Watch Movies Free",
-    "brand": "Watchsy.cc",
+    "brand": "[ Watchsy.cc ]",
     "offer": "50% OFF for first purchase",
     "cta": "Claim Now",
     "target": "For coders & creators",
@@ -31,6 +31,6 @@
       "times": 6,
       "showOncePerSession": true
     },
-    "displayDelaySeconds": 2
+    "displayDelaySeconds": 5
   }
 }
