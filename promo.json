@@ -27,8 +27,8 @@
       "/checkout"
     ],
     "displayFrequency": {
-      "minutes": 1,
-      "times": 6,
+      "minutes": 60,
+      "times": 1,
       "showOncePerSession": true
     },
     "displayDelaySeconds": 5
