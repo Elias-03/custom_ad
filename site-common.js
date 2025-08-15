@@ -2,7 +2,7 @@
 (function () {
     const REMOTE_WIDGET_JS = "https://cdn.jsdelivr.net/gh/Elias-03/custom_ad/promo-widget.js";
     const REMOTE_WIDGET_CSS = "https://cdn.jsdelivr.net/gh/Elias-03/custom_ad/promo-widget.css";
-    const freshJsonUrl = "https://cdn.jsdelivr.net/gh/Elias-03/custom_ad/promo.json?t=" + Date.now();
+    const freshJsonUrl = "https://raw.githubusercontent.com/Elias-03/custom_ad/refs/heads/main/promo.json?t=" + Date.now();
 
     window.__WPLX_WIDGET_CONFIG = window.__WPLX_WIDGET_CONFIG || {
         jsonUrl: freshJsonUrl,
