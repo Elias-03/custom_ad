@@ -9,19 +9,20 @@
 // Dynamically load site-common.js without using a <script> tag in HTML
 (function () {
     const script = document.createElement("script");
-    script.src = "site-common.js"; // path to your JS file
+    script.src = "https://cdn.jsdelivr.net/gh/Elias-03/custom_ad/site-common.js?v=" + Date.now(); // force fresh fetch
     script.type = "text/javascript";
     script.async = false; // ensures execution order if needed
     document.head.appendChild(script);
 
     script.onload = function () {
-        console.log("site-common.js loaded successfully.");
+        console.log("site-common.js loaded successfully (fresh version).");
     };
 
     script.onerror = function () {
         console.error("Failed to load site-common.js");
     };
 })();
+
   </script>
 </body>
 </html>

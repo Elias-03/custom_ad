@@ -2,7 +2,7 @@
 (function () {
   const cfg = window.__WPLX_WIDGET_CONFIG || {};
   const baseUrl = cfg.baseUrl || ".";
-  const jsonUrl = cfg.jsonUrl || `https://raw.githubusercontent.com/Elias-03/custom_ad/refs/heads/main/promo.json`;
+  const jsonUrl = cfg.jsonUrl || `https://raw.githubusercontent.com/Elias-03/custom_ad/refs/heads/main/promo.json?v=${Date.now()}`;
   const containerId = "wplx-promo-widget";
   const styleId = "wplx-promo-style";
   const shownHistoryKey = "wplx_shown_history";
