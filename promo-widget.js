@@ -80,7 +80,7 @@
     if (style.width) el.style.width = style.width;
     el.innerHTML = buildMarkup(promo, style);
 
-    setTimeout(() => el.classList.add("visible"), 50);
+    setTimeout(() => el.classList.add("visible"), (rules && rules.displayDelaySeconds) ? (rules.displayDelaySeconds * 1000) : 50);
   }
 
   function removeWidget() {

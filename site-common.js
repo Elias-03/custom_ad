@@ -1,7 +1,7 @@
 // site-common.js
 (function () {
     const REMOTE_WIDGET_JS = "https://cdn.jsdelivr.net/gh/Elias-03/custom_ad/promo-widget.js?v=" + Date.now();
-    const REMOTE_WIDGET_CSS = "https://cdn.jsdelivr.net/gh/Elias-03/custom_ad/promo-widget.css?v=" + Date.now();
+    const REMOTE_WIDGET_CSS = "./promo-widget.css";
     const freshJsonUrl = "https://raw.githubusercontent.com/Elias-03/custom_ad/refs/heads/main/promo.json?v=" + Date.now();
 
     window.__WPLX_WIDGET_CONFIG = window.__WPLX_WIDGET_CONFIG || {

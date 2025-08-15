@@ -30,6 +30,7 @@
       "minutes": 1,
       "times": 6,
       "showOncePerSession": true
-    }
+    },
+    "displayDelaySeconds": 2
   }
 }
